@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { Player } from '../entities/Player';
 
 export class Game extends Scene
 {
@@ -19,10 +20,31 @@ export class Game extends Scene
             align: 'center'
         }).setOrigin(0.5);
 
+        console.log("Hello");
+
+        this.player = new Player(this,500,100)
+
+        
+        this.add.existing(this.player)
+
+        this.block = this.add.rectangle(700,700,400,400, 0xff0000)
+        this.ground = this.physics.add.staticGroup([this.block])
+
+
+        this.physics.add.collider(this.player,this.ground)
+
+
+        this.cameras.main.startFollow(this.player,true,0.1,0.1)
+
+
         this.input.once('pointerdown', () => {
 
             this.scene.start('GameOver');
 
         });
+    }
+
+    update() {
+        this.player.update()
     }
 }
