@@ -70,6 +70,6 @@ export class LDTKLevel {
     }
 
     AutoTileToMapData() {
-        // TODO: Con
+        // TODO: Convert AutoTile to Map Object in Phaser
     }
 }
