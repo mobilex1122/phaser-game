@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Build Relase
+name: Build Release
 
 on:
   # Runs on pushes targeting the default branch
@@ -30,12 +30,11 @@ jobs:
         uses: montudor/action-zip@v1
         with:
           args: zip -qq -r game.zip dist
-      - name: Publish Relase
-        uses: ncipollo/release-action@v1
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          artifacts: "release.tar.gz,foo/*.txt"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
           prerelease: true
-          tag: ${{ github.ref }}
-          commit: "main"
-          name: $GITHUB_REF
-          body: ${{ github.event.head_commit.message }}
+          title: "Development Build"
+          files: |
+            game.zip
