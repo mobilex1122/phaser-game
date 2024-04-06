@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Build Release
+name: Build Development Version
 
 on:
   # Runs on pushes targeting the default branch
@@ -11,6 +11,10 @@ permissions:
   contents: write
   pages: write
   id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   # Single deploy job since we're just deploying
