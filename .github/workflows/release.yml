@@ -11,12 +11,6 @@ permissions:
   contents: read
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   # Single deploy job since we're just deploying
   release:
@@ -41,6 +35,6 @@ jobs:
         with:
           artifacts: "release.tar.gz,foo/*.txt"
           prerelease: true
+          commit: ${{ github.event.head_commit.id }}
           name: $GITHUB_REF
-          body: >
-            ${{ github.event.head_commit.message }}
+          body: ${{ github.event.head_commit.message }}
