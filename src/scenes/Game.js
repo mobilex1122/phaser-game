@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { Player } from '../entities/Player';
-
+import levels from '../levels.json'
+import LDTKLoader from '../LDTKLoader';
 export class Game extends Scene
 {
     constructor ()
@@ -10,10 +11,8 @@ export class Game extends Scene
 
     create ()
     {
-        this.cameras.main.setBackgroundColor(0x00ff00);
-
-        this.add.image(512, 384, 'background').setAlpha(0.5);
-
+        this.cameras.main.setBackgroundColor(0x000000); 
+        this.world = new LDTKLoader(levels)
         this.add.text(512, 384, 'Make something fun!\nand share it with us:\nsupport@phaser.io', {
             fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
@@ -30,7 +29,8 @@ export class Game extends Scene
         this.block = this.add.rectangle(700,700,400,400, 0xff0000)
         this.ground = this.physics.add.staticGroup([this.block])
 
-
+        this.world.getLevel("Level_0")
+        
         this.physics.add.collider(this.player,this.ground)
 
 
@@ -46,5 +46,6 @@ export class Game extends Scene
 
     update() {
         this.player.update()
+
     }
 }

@@ -30,7 +30,7 @@ export class Player extends Physics.Arcade.Sprite {
         }
         if (this.input.down.isDown) {
             this.setVelocityY(this.SPEED)
-        } else if (this.input.up.isDown && this.body.touching.down) {
+        } else if (this.input.up.isDown && this.body.blocked.down) {
             this.setVelocityY(-this.JUMP)
         }
     }

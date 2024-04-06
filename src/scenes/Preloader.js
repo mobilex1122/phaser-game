@@ -33,7 +33,9 @@ export class Preloader extends Scene
         this.load.setPath('assets');
 
         this.load.image('logo', 'logo.png');
-        this.load.text("levels", 'levels.ldtk')
+        this.load.image('bg-crt','bg-crt.png')
+
+        this.load.spritesheet("tiles","tiles.png", {frameWidth:8,frameHeight:8})
     }
 
     create ()
