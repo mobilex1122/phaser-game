@@ -40,6 +40,7 @@ jobs:
   # Single deploy job since we're just deploying
   build:
     name: Build Game
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -84,59 +85,33 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-  # dev-release:
-  #   name: Release Dev Build
-  #   if: inputs.mode == 'dev'
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - name: Checkout Repo
-  #       uses: actions/checkout@master
-  #     - name: Download Artifact
-  #       uses: actions/download-artifact@master
-  #       with:
-  #         name: dist
-  #         path: dist
-  #     - name: Create Zip
-  #       uses: montudor/action-zip@v1
-  #       with:
-  #         args: zip -qq -r game.zip dist
+  dev-release:
+    name: Release Dev Build
+    if: inputs.mode == 'dev'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Download Artifact
+        uses: actions/download-artifact@master
+        with:
+          name: dist
+          path: dist
+      - name: Create Zip
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r game.zip dist
 
-       
-  #     #- uses: "marvinpinto/action-automatic-releases@latest"
-  #     - uses: "mathieucarbou/marvinpinto-action-automatic-releases@latest"
-  #       with:
-  #         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-  #         automatic_release_tag: "dev-${{ inputs.version }}"
-  #         prerelease: true
-  #         title: "Development Build (${{ inputs.version}})"
-  #         files: |
-  #           game.zip
-  # prod-release:
-  #   name: Release Production Build
-  #   if: inputs.mode == 'prod'
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - name: Checkout Repo
-  #       uses: actions/checkout@master
-  #     - name: Download Artifact
-  #       uses: actions/download-artifact@master
-  #       with:
-  #         name: dist
-  #         path: dist
-  #     - name: Create Zip
-  #       uses: montudor/action-zip@v1
-  #       with:
-  #         args: zip -qq -r game.zip dist
-
-       
-  #     #- uses: "marvinpinto/action-automatic-releases@latest"
-  #     - uses: "mathieucarbou/marvinpinto-action-automatic-releases@latest"
-  #       with:
-  #         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-  #         automatic_release_tag: "dev-${{ inputs.version }}"
-  #         prerelease: true
-  #         title: "${{ inputs.name }} (${{ inputs.version}})"
-  #         files: |
-  #           game.zip
+      - name: Get previous tag
+        id: previoustag
+        uses: 'WyriHaximus/github-action-get-previous-tag@v1'
+        with:
+          fallback: 'dev-v0.0.0'
+          prefix: 'dev-v'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Publish Dev Release'
+        run: gh release create ${{ steps.previoustag.outputs.tag }} --generate-notes -t 'Dev Build' -p ./game.zip
+      #- uses: "marvinpinto/action-automatic-releases@latest"
+      - 
