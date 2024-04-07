@@ -2,26 +2,21 @@
 name: Build Development Version
 
 on:
-  push:
-    branches:
-      - 'main'
   # Runs on pushes targeting the default branch
-  # workflow_dispatch:
-  #   inputs:
-  #     name:
-  #       description: 'name'
-  #       requied: true
-  #       type: string
-  #     version:
-  #       description: 'version (0.0.0)'
-  #       requied: true
-  #       type: string
-  #     mode:
-  #       description: 'mode'
-  #       type: choice
-  #       options:
-  #         - dev
-  #         - prod
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'name'
+        requied: false
+        default: ''
+        type: string
+      bump:
+         description: 'Version Bump'
+         type: choice
+         options:
+            - patch
+            - minor
+            - major
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -115,8 +110,20 @@ jobs:
         uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
           version: ${{ steps.previoustag.outputs.tag }}
-      - name: 'Publish Dev Release'
-        run: gh release create v${{ steps.semvers.outputs.patch }} --generate-notes -t 'Dev Build' -p ./game.zip
+      - name: 'Publish Patch Release'
+        if: inputs.bump == 'patch'
+        run: "gh release create ${{ steps.semvers.outputs.v_patch }} --generate-notes -t 'Patch: ${{ inputs.name }} ${{ steps.semvers.outputs.v_patch }}' -p ./game.zip"
+        env:
+          GH_TOKEN: ${{ github.token }}
+      
+      - name: 'Publish Minor Release'
+        run: "gh release create ${{ steps.semvers.outputs.v_minor }} --generate-notes -t 'Minor: ${{ inputs.name }} ${{ steps.semvers.outputs.v_minor }}' -p ./game.zip"
+        if: inputs.bump == 'minor'
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: 'Publish Major Release'
+        if: inputs.bump == 'major'
+        run: "gh release create ${{ steps.semvers.outputs.v_major }} --generate-notes -t 'Major: ${{ inputs.name }} ${{ steps.semvers.outputs.v_major }}' -p ./game.zip"
         env:
           GH_TOKEN: ${{ github.token }}
       #- uses: "marvinpinto/action-automatic-releases@latest" 
