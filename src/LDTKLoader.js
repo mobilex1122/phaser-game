@@ -62,9 +62,10 @@ export class LDTKLevel {
     constructor(levelData) {
         this.levelData = levelData
         this.layerMapping = {}
-        if (levelData.layerInstances) {
-            // TODO: Layer name mappping
-            console.dir(levelData.layerInstances)
+        if (levelData.layerInstances != undefined) {
+            levelData.layerInstances.forEach((l,i)=> {
+                this.layerMapping[l.__identifier] = i
+            })
         } else {
             throw new LDTKVarNotFound("layerInstances")
         }
