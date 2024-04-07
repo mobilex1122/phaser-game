@@ -1,3 +1,4 @@
+//import Phaser from "phaser";
 export default class {
     /**
      * LDTK Phaser importer
@@ -57,9 +58,21 @@ export class LDTKLevel {
         }
     }
 
-    AutoTileToMapData() {
+    IntAutoTileToMapData(layerID) {
         // TODO: Convert AutoTile to Map Object in Phaser
+        // Check if layer exists in the mapping
+        if (this.layerMapping[layerID] == undefined) {
+            throw new LDTKVarNotFound(layerID);
+        }
+        const layer = this.levelData.layerInstances[this.layerMapping[layerID]];
         // Check if layer is the correct type
+        if (layer.__type != "IntGrid") {
+            throw new LDTKWrongTypeLayer(layer.__type, "IntGrid");
+        }
+
+        //if (layer.autoLayerTiles != undefined) {
+        //    let layerData = new Phaser.Tilemaps.MapData()
+        //}
     }
 }
 
@@ -79,5 +92,9 @@ class LDTKVarNotFound extends Error {
         super("Object does not include \"" + missingVar + "\". Is it really LDtk data?");
     }
 }
+
+class LDTKWrongTypeLayer extends Error {
+    constructor(type,expects) {
+        super(`Layer convert error! Wrong type (${type}) expected (${expects})`);
     }
 }
