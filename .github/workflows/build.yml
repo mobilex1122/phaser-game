@@ -97,8 +97,8 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          name: Development Build
-          tag_name: 'latest'
+          name: "Dev Build: $GITHUB_REF_NAME"
+          tag_name: "Dev: $GITHUB_REF_NAME"
           prerelease: true
           generate_release_notes: true
           files: game.zip
