@@ -23,7 +23,6 @@ jobs:
   # Single deploy job since we're just deploying
   build:
     name: Build Game
-    environment: deb-build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
