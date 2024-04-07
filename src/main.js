@@ -11,7 +11,7 @@ const physicsConfig = {
         debug:true,
         gravity: new Phaser.Math.Vector2(0,500)
     }
-}
+};
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig

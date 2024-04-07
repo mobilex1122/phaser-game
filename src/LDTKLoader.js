@@ -6,17 +6,19 @@ export default class {
      */
     constructor(ldtkObject) {
         console.log("📥 LDtk Loader v0.0.1a");
-        this.ldtkObject = ldtkObject
-        this.levelMappings = {}
+        this.ldtkObject = ldtkObject;
+        this.levelMappings = {};
         if (ldtkObject.levels != undefined) {
+            console.warn("World indexing started!");
             ldtkObject.levels.forEach((el,index) => {
-                this.levelMappings[el.identifier] = index
+                this.levelMappings[el.identifier] = index;
             });
+            console.warn("World indexing done!");
         } else {
-            throw new LDTKVarNotFound("levels")
+            throw new LDTKVarNotFound("levels");
         }
 
-        console.dir(this.levelMappings)
+        console.dir(this.levelMappings);
     }
     /**
      * Gets Level data
@@ -26,12 +28,12 @@ export default class {
     getLevel(name) {
         if (this.levelMappings[name] != undefined) {
             if (this.ldtkObject.levels) {
-                return new LDTKLevel(this.ldtkObject.levels[this.levelMappings[name]])
+                return new LDTKLevel(this.ldtkObject.levels[this.levelMappings[name]]);
             } else {
-                throw new LDTKVarNotFound("levels")
+                throw new LDTKVarNotFound("levels");
             }
         } else {
-            throw new LevelNotFound(name)
+            throw new LevelNotFound(name);
         }
     }
 }
@@ -44,14 +46,14 @@ export class LDTKLevel {
      * @param {*} levelData 
      */
     constructor(levelData) {
-        this.levelData = levelData
-        this.layerMapping = {}
+        this.levelData = levelData;
+        this.layerMapping = {};
         if (levelData.layerInstances != undefined) {
             levelData.layerInstances.forEach((l,i)=> {
-                this.layerMapping[l.__identifier] = i
-            })
+                this.layerMapping[l.__identifier] = i;
+            });
         } else {
-            throw new LDTKVarNotFound("layerInstances")
+            throw new LDTKVarNotFound("layerInstances");
         }
     }
 
@@ -64,7 +66,7 @@ export class LDTKLevel {
 // Error Types
 class LevelNotFound extends Error {
     constructor(levelName) {
-        super(`Level "${levelName}" was not found in World!`)
+        super(`Level "${levelName}" was not found in World!`);
     }
 }
 
@@ -74,6 +76,8 @@ class LDTKVarNotFound extends Error {
      * @param {*} missingVar Missing Variable that should be chacked
      */
     constructor(missingVar) {
-        super("Object does not include \"" + missingVar + "\". Is it really LDtk data?")
+        super("Object does not include \"" + missingVar + "\". Is it really LDtk data?");
+    }
+}
     }
 }
