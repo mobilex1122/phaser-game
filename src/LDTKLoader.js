@@ -56,7 +56,7 @@ export class LDTKLevel {
     /**
      * General Lavel Data
      * 
-     * NOTE: Run only when needed. Hangs if level is large
+     * NOTE: Run only when needed. Hangs process if level is large
      * @param {*} levelData 
      */
     constructor(levelData) {
