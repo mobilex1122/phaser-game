@@ -36,22 +36,6 @@ export default class {
     }
 }
 
-class LevelNotFound extends Error {
-    constructor(levelName) {
-        super(`Level "${levelName}" was not found in World!`)
-    }
-}
-
-class LDTKVarNotFound extends Error {
-    /**
-     * 
-     * @param {*} missingVar Missing Variable that should be chacked
-     */
-    constructor(missingVar) {
-        super("Object does not include \"" + missingVar + "\". Is it really LDtk data?")
-    }
-}
-
 export class LDTKLevel {
     /**
      * General Lavel Data
@@ -73,5 +57,23 @@ export class LDTKLevel {
 
     AutoTileToMapData() {
         // TODO: Convert AutoTile to Map Object in Phaser
+        // Check if layer is the correct type
+    }
+}
+
+// Error Types
+class LevelNotFound extends Error {
+    constructor(levelName) {
+        super(`Level "${levelName}" was not found in World!`)
+    }
+}
+
+class LDTKVarNotFound extends Error {
+    /**
+     * 
+     * @param {*} missingVar Missing Variable that should be chacked
+     */
+    constructor(missingVar) {
+        super("Object does not include \"" + missingVar + "\". Is it really LDtk data?")
     }
 }
