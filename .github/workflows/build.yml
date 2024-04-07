@@ -16,15 +16,11 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-env:
-  NODE_VERSION: 20
-
 jobs:
   # Single deploy job since we're just deploying
   build:
     name: Build Game
-    enviroment:
-      name: Build
+    enviroment: deb-build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -71,8 +67,6 @@ jobs:
         uses: actions/deploy-pages@v4
   release:
     name: Release Development Build
-    enviroment:
-      name: Release
     runs-on: ubuntu-latest
     needs: build
     steps:
