@@ -24,9 +24,5 @@ export class MainMenu extends Scene
             this.scene.start('Game');
 
         });
-
-        setTimeout(() => {
-            this.scene.start("Game")
-        },500)
     }
 }
