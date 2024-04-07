@@ -5,6 +5,7 @@ export default class {
      * @param {Object} ldtkObject Parsed LDTK json
      */
     constructor(ldtkObject) {
+        console.log("📥 LDtk Loader v0.0.1a");
         this.ldtkObject = ldtkObject
         this.levelMappings = {}
         if (ldtkObject.levels != undefined) {
