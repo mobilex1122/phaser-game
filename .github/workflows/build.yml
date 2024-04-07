@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Build Development Version
+name: Build and Release
 
 on:
   # Runs on pushes targeting the default branch
@@ -87,6 +87,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
+      - run: git fetch --tags origin
       - name: Download Artifact
         uses: actions/download-artifact@master
         with:
