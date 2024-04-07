@@ -106,10 +106,17 @@ jobs:
         id: previoustag
         uses: 'WyriHaximus/github-action-get-previous-tag@v1'
         with:
-          fallback: 'dev-v0.0.0'
-          prefix: 'dev-v'
+          fallback: 'v0.0.0'
+          prefix: 'v'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Get next minor version'
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@v1"
+        with:
+          version: ${{ steps.previoustag.outputs.tag }}
       - name: 'Publish Dev Release'
-        run: gh release create ${{ steps.previoustag.outputs.tag }} --generate-notes -t 'Dev Build' -p ./game.zip
+        run: gh release create ${{ steps.semvers.outputs.patch }} --generate-notes -t 'Dev Build' -p ./game.zip
+        env:
+          GH_TOKEN: ${{ github.token }}
       #- uses: "marvinpinto/action-automatic-releases@latest" 
