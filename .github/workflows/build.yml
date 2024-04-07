@@ -16,6 +16,9 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  NODE_VERSION: 20
+
 jobs:
   # Single deploy job since we're just deploying
   build:
@@ -24,6 +27,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: $NODE_VERSION
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
@@ -73,6 +79,9 @@ jobs:
         with:
           name: dist
           path: dist
+      - uses: actions/setup-node@v4
+        with:
+          node-version: $NODE_VERSION
       - name: Create Zip
         uses: montudor/action-zip@v1
         with:
