@@ -121,7 +121,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
       - name: 'Publish Major Release'
         if: inputs.bump == 'major'
-        run: "gh release create ${{ steps.semvers.outputs.v_major }} --generate-notes -t 'Major: ${{ inputs.name }} ${{ steps.semvers.outputs.v_major }}' -p ./game.zip"
+        run: "gh release create ${{ steps.semvers.outputs.v_major }} --generate-notes -t 'Major: ${{ inputs.name }} ${{ steps.semvers.outputs.v_major }}' --latest ./game.zip"
         env:
           GH_TOKEN: ${{ github.token }}
       #- uses: "marvinpinto/action-automatic-releases@latest" 
