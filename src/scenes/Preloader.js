@@ -36,7 +36,7 @@ export class Preloader extends Scene
         this.load.image('bg-crt','bg-crt.png');
         this.load.image('char','character.png');
 
-        this.load.spritesheet("tiles","tiles.png", {frameWidth:8,frameHeight:8});
+        this.load.image("tiles","tiles.png");
     }
 
     create ()

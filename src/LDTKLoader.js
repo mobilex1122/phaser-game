@@ -1,4 +1,4 @@
-//import Phaser from "phaser";
+import Phaser from "phaser";
 export default class {
     /**
      * LDTK Phaser importer
@@ -18,6 +18,12 @@ export default class {
         } else {
             throw new LDTKVarNotFound("levels");
         }
+        this.tilesets = [];
+        ldtkObject.defs.tilesets.forEach(tileset => {
+            this.tilesets.push(
+                tileset
+            );
+        });
 
         console.dir(this.levelMappings);
     }
@@ -29,7 +35,7 @@ export default class {
     getLevel(name) {
         if (this.levelMappings[name] != undefined) {
             if (this.ldtkObject.levels) {
-                return new LDTKLevel(this.ldtkObject.levels[this.levelMappings[name]]);
+                return new LDTKLevel(this.ldtkObject.levels[this.levelMappings[name]], this.tilesets);
             } else {
                 throw new LDTKVarNotFound("levels");
             }
@@ -39,40 +45,79 @@ export default class {
     }
 }
 
-export class LDTKLevel {
+export class LDTKLevel extends Phaser.Tilemaps.MapData {
     /**
      * General Lavel Data
      * 
      * NOTE: Run only when needed. Hangs process if level is large
      * @param {*} levelData 
      */
-    constructor(levelData) {
+    constructor(levelData,tilesets) {
+        super();
+        console.log(tilesets);
+        this.tileHeight = 64;
+        this.tileWidth = 64;
         this.levelData = levelData;
         this.layerMapping = {};
         if (levelData.layerInstances != undefined) {
-            levelData.layerInstances.forEach((l,i)=> {
-                this.layerMapping[l.__identifier] = i;
+            levelData.layerInstances.forEach((l)=> {
+                let layer = new Phaser.Tilemaps.LayerData();
+                layer.width = l.__cWid;
+                layer.height = l.__cHei;
+                layer.tileWidth = l.__gridSize;
+                layer.MapData = this;
+                layer.name = l.__identifier;
+                if (l.autoLayerTiles != undefined) {
+                    for (var y = 0; y < l.__cHei; y++) {
+                        layer.data[y] = [];
+                        for (var x = 0; x < l.__cWid; x++) {
+                            layer.data[y][x] = null;
+                        }
+                    }
+                    l.autoLayerTiles.forEach((tile) => {
+                        let x = tile.px[0] / l.__gridSize;
+                        let y = tile.px[1] / l.__gridSize;
+                        let t = new Phaser.Tilemaps.Tile(
+                            layer,
+                            tile.t,
+                            x,y,
+                            l.__gridSize,l.__gridSize,
+                            l.__gridSize,l.__gridSize);
+                        switch (tile.f) {
+                            case 1:
+                                t.flipX = true;
+                                t.flipY = false;
+                                break;
+                            case 2:
+                                t.flipX = false;
+                                t.flipY = true;
+                                break;
+                            case 3:
+                                t.flipX = true;
+                                t.flipY = true;
+                                break; 
+                            default:
+                                break;
+                        }
+                        t.setCollision(true,true,true,true);
+                        
+                        //t.setCollisionCallback(() => {
+                        //    console.log("coll");
+                        //});
+
+                        layer.data[y][x] = t;
+                    });
+                    
+                    // console.dir(layer.data);
+                } else {
+                    throw new LDTKWrongTypeLayer('s','s');
+                }
+
+                this.layers.push(layer);
             });
         } else {
             throw new LDTKVarNotFound("layerInstances");
         }
-    }
-
-    IntAutoTileToMapData(layerID) {
-        // TODO: Convert AutoTile to Map Object in Phaser
-        // Check if layer exists in the mapping
-        if (this.layerMapping[layerID] == undefined) {
-            throw new LDTKVarNotFound(layerID);
-        }
-        const layer = this.levelData.layerInstances[this.layerMapping[layerID]];
-        // Check if layer is the correct type
-        if (layer.__type != "IntGrid") {
-            throw new LDTKWrongTypeLayer(layer.__type, "IntGrid");
-        }
-
-        //if (layer.autoLayerTiles != undefined) {
-        //    let layerData = new Phaser.Tilemaps.MapData()
-        //}
     }
 }
 
